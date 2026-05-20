@@ -10,7 +10,15 @@ add_library(io
 )
 target_include_directories(io PUBLIC include)
 
+add_library(image
+    src/image.c
+)
+target_include_directories(image PUBLIC include)
+
 add_executable(imgtool
     src/main.c
 )
-target_link_libraries(imgtool PRIVATE io)
+target_link_libraries(imgtool
+    PRIVATE io
+    PRIVATE image
+)

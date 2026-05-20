@@ -10,9 +10,9 @@ typedef enum {
     IO_ERR_READ,
     IO_ERR_OOM,
     IO_ERR_WRITE,
-} e_io_err;
+} e_io_status;
 
-e_io_err read_file(const char *filename, uint8_t **out, uint32_t *out_size);
-e_io_err write_file(const char *filename, uint8_t *data, uint32_t size);
+e_io_status read_file(const char *filename, uint8_t **out, uint32_t *out_size);
+e_io_status write_file(const char *filename, uint8_t *data, uint32_t size);
 
 #endif

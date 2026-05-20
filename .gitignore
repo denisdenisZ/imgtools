@@ -1,3 +1,5 @@
 imgs/
 build/
 out/
+build
+compile_commands.json

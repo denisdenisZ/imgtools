@@ -6,10 +6,10 @@
 
 #include "io.h"
 
-e_io_err read_file(const char *filename, uint8_t **out, uint32_t *out_size) {
+e_io_status read_file(const char *filename, uint8_t **out, uint32_t *out_size) {
     *out = NULL;
     *out_size = 0;
-    e_io_err err = IO_SUCCESS;
+    e_io_status status = IO_SUCCESS;
 
     FILE *f = fopen(filename, "rb");
     if (!f) {
@@ -23,14 +23,14 @@ e_io_err read_file(const char *filename, uint8_t **out, uint32_t *out_size) {
 
     if (size < 0) {
         fprintf(stderr, "ftell failed for '%s': %s\n", filename, strerror(errno));
-        err = IO_ERR_READ;
+        status = IO_ERR_READ;
         goto cleanup;
     }
 
     *out = malloc(size);
     if (!*out) {
         fprintf(stderr, "malloc failed for '%s': %s\n", filename, strerror(errno));
-        err = IO_ERR_OOM;
+        status = IO_ERR_OOM;
         goto cleanup;
     }
 
@@ -38,7 +38,7 @@ e_io_err read_file(const char *filename, uint8_t **out, uint32_t *out_size) {
         fprintf(stderr, "fread failed for '%s': %s\n", filename, strerror(errno));
         free(*out);
         *out = NULL;
-        err = IO_ERR_READ;
+        status = IO_ERR_READ;
         goto cleanup;
     }
 
@@ -46,11 +46,11 @@ e_io_err read_file(const char *filename, uint8_t **out, uint32_t *out_size) {
 
 cleanup:
     fclose(f);
-    return err;
+    return status;
 }
 
-e_io_err write_file(const char *filename, uint8_t *data, uint32_t size) {
-    e_io_err err = IO_SUCCESS;
+e_io_status write_file(const char *filename, uint8_t *data, uint32_t size) {
+    e_io_status status = IO_SUCCESS;
 
     FILE *f = fopen(filename, "wb");
     if (!f) {
@@ -60,11 +60,11 @@ e_io_err write_file(const char *filename, uint8_t *data, uint32_t size) {
 
     if (fwrite(data, 1, size, f) != size) {
         fprintf(stderr, "fwrite failed for '%s': %s\n", filename, strerror(errno));
-        err = IO_ERR_WRITE;
+        status = IO_ERR_WRITE;
         goto cleanup;
     }
 
 cleanup:
     fclose(f);
-    return err;
+    return status;
 }
