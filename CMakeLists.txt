@@ -15,10 +15,20 @@ add_library(image
 )
 target_include_directories(image PUBLIC include)
 
+add_library(dcmp
+    src/dcmp/dcmp.c
+)
+target_include_directories(dcmp PUBLIC include/dcmp)
+
 add_executable(imgtool
     src/main.c
 )
+
 target_link_libraries(imgtool
     PRIVATE io
     PRIVATE image
+    PRIVATE dcmp
 )
+
+enable_testing()
+add_subdirectory(test)
