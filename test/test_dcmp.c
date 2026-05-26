@@ -10,8 +10,6 @@
 
 #include "tests.h"
 
-#define TEST_START(name) printf("\n\n[TEST] %-40s \n", name)
-
 #define KP_CNT  5
 #define SLP_CNT (KP_CNT - 1)
 

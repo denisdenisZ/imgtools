@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "dcmp.h"
+#include "img_math.h"
 
 e_dcmp_status init_pwl(st_pwl *out, size_t cnt) {
     if (out == NULL || cnt == 0) {
@@ -94,10 +95,6 @@ void free_pwl(st_pwl *pwl) {
 /*            SLOPE CALCULATION                */
 /*=============================================*/
 
-static inline double calc_slope(uint32_t x1, uint32_t x2, uint32_t y1, uint32_t y2) {
-    return (double)(y2-y1)/(double)(x2-x1);
-}
-
 e_dcmp_status calc_slopes(st_pwl *pwl) {
     if (pwl == NULL) {
         fprintf(stderr, "NULL pwl passed to calc_slopes");
@@ -105,7 +102,7 @@ e_dcmp_status calc_slopes(st_pwl *pwl) {
     }
 
     for (size_t i = 0; i < pwl->slope_cnt; i++) {
-        pwl->slopes[i] = calc_slope(pwl->dcmp_x[i], pwl->dcmp_x[i+1], pwl->dcmp_y[i], pwl->dcmp_y[i+1]);
+        calc_slope(pwl->dcmp_x[i], pwl->dcmp_x[i+1], pwl->dcmp_y[i], pwl->dcmp_y[i+1], &pwl->slopes[i]);
     }
 
     return DCMP_SUCCESS;
@@ -116,17 +113,15 @@ e_dcmp_status calc_slopes(st_pwl *pwl) {
 /*            PWL APPROXIMATION                */
 /*=============================================*/
 
-static inline double approximate_double(uint32_t x, double slope, uint32_t x1, uint32_t y1) {
-    return y1+((x-x1)*slope);
-}
-
 static inline double approximate_pwl_val_double(uint32_t x, const st_pwl *pwl) {
     if (x <= pwl->dcmp_x[0]) return pwl->dcmp_y[0];
     if (x >= pwl->dcmp_x[pwl->cnt-1]) return pwl->dcmp_y[pwl->cnt-1];
 
     for (size_t i = 0; i < pwl->cnt-1; i++) {
         if (x >= pwl->dcmp_x[i] && x < pwl->dcmp_x[i+1]) {
-            return (double)approximate_double(x, pwl->slopes[i], pwl->dcmp_x[i], pwl->dcmp_y[i]);
+            double res = 0.0;
+            point_slope_lerp(x, pwl->slopes[i], pwl->dcmp_x[i], pwl->dcmp_y[i], &res);
+            return res;
         }
     }
 

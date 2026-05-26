@@ -19,10 +19,13 @@ add_library(dcmp
     src/dcmp/dcmp.c
 )
 target_include_directories(dcmp PUBLIC include/dcmp)
+target_include_directories(dcmp PUBLIC include/math)
 
 add_executable(imgtool
     src/main.c
 )
+
+add_subdirectory(src/math)
 
 target_link_libraries(imgtool
     PRIVATE io

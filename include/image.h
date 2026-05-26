@@ -83,17 +83,23 @@ typedef enum {
 } e_img_status;
 
 typedef struct {
+    char *filename;
+
     bpp_t bpp;
     e_bayer_pat pattern;
     e_packing packing;
     e_bit_align bit_align;
     e_endianness endianness;
     st_compand_info *compand;
+
     uint32_t width;
     uint32_t height;
+
     uint32_t femb_lines_cnt;
     uint32_t remb_lines_cnt;
+
     uint32_t black_level;
+
     uint32_t offset_x;
     uint32_t offset_y;
 } st_raw_bayer_img_cfg;
