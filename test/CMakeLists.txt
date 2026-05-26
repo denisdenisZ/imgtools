@@ -8,9 +8,9 @@ add_executable(tests
 target_compile_options(tests PRIVATE $<$<CONFIG:Debug>:-ggdb>)
 
 target_link_libraries(tests
-    PRIVATE io
-    PRIVATE image
-    PRIVATE dcmp
+    PRIVATE img_io
+    PRIVATE img
+    PRIVATE img_dcmp
     PRIVATE img_math
 )
 

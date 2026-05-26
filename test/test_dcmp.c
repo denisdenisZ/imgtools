@@ -5,8 +5,8 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "dcmp/dcmp.h"
-#include "dcmp/print.h"
+#include "dcmp.h"
+#include "print.h"
 
 #include "tests.h"
 
