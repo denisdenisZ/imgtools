@@ -104,6 +104,7 @@ typedef struct {
 typedef struct {
     st_compand_info *compand;
     e_bayer_pat pattern;
+    bpp_t bpp;
 
     uint32_t width;
     uint32_t height;

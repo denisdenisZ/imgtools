@@ -121,6 +121,7 @@ e_img_status normalize_img(const st_raw_bayer_img *img, st_norm_bayer_img *out) 
 
     out->pattern = img->pattern;
     out->compand = img->compand;
+    out->bpp = img->bpp;
     out->width = img->width;
     out->height = img->height;
     out->femb_lines_cnt = img->femb_lines_cnt;
