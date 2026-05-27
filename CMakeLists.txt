@@ -14,5 +14,7 @@ add_subdirectory(src/img_math)
 add_executable(imgtool src/main.c)
 target_link_libraries(imgtool PRIVATE img img_dcmp img_io img_math)
 
+add_subdirectory(src/apps)
+
 enable_testing()
 add_subdirectory(test)

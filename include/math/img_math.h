@@ -45,4 +45,8 @@ static inline e_math_status point_slope_lerp(uint32_t x, double slope, uint32_t 
     return MATH_SUCCESS;
 }
 
+static inline uint32_t log2_pow2(uint32_t val) {
+    return (uint32_t)__builtin_ctz(val);
+}
+
 #endif

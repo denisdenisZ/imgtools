@@ -136,6 +136,16 @@ e_dcmp_status comp_decomp(const double *vals, const st_pwl *pwl, double *out, si
     return DCMP_SUCCESS;
 }
 
+e_dcmp_status apply_comp_decomp(st_norm_bayer_img *img, const st_pwl *pwl) {
+    if (!img || !pwl) return DCMP_ERR_INVALID_ARG;
+
+    for (size_t i = 0; i < img->data_size; i++)
+        img->data[i] = (uint32_t)approximate_pwl_val_double(img->data[i], pwl);
+
+    img->bpp = pwl->bpp_y;
+    return DCMP_SUCCESS;
+}
+
 /*=============================================*/
 /*                  REVERSE                    */
 /*=============================================*/

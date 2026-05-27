@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "dcmp.h"
@@ -317,4 +318,36 @@ void test_comp_decomp_clipped() {
 
     free_pwl(&comp_pwl);
     free_pwl(&decomp_pwl);
+}
+
+void test_apply_comp_decomp() {
+    TEST_START("APPLY COMP DECOMP");
+    st_pwl pwl = {0};
+    setup_test_pwl_with_slopes(&pwl);
+
+    st_norm_bayer_img img = {
+        .bpp       = 24,
+        .width     = KP_CNT,
+        .height    = 1,
+        .data_size = KP_CNT,
+        .data      = malloc(KP_CNT * sizeof(uint32_t))
+    };
+    for (size_t i = 0; i < KP_CNT; i++)
+        img.data[i] = test_x[i];
+
+    assert(apply_comp_decomp(&img, &pwl) == DCMP_SUCCESS);
+    assert(img.bpp == 12);
+
+    for (size_t i = 0; i < KP_CNT; i++)
+        assert(img.data[i] == test_y[i]);
+
+    free(img.data);
+    free_pwl(&pwl);
+}
+
+void test_apply_comp_decomp_null() {
+    TEST_START("APPLY COMP DECOMP NULL GUARD");
+    st_pwl pwl = {0};
+    assert(apply_comp_decomp(NULL, &pwl) == DCMP_ERR_INVALID_ARG);
+    assert(apply_comp_decomp(NULL, NULL) == DCMP_ERR_INVALID_ARG);
 }

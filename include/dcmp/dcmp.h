@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "img/image.h"
 
 typedef enum {
     DCMP_SUCCESS,
@@ -29,5 +30,6 @@ void free_pwl(st_pwl *pwl);
 e_dcmp_status calc_slopes(st_pwl *pwl);
 e_dcmp_status pwl_reverse(st_pwl *pwl, st_pwl *reverse);
 e_dcmp_status comp_decomp(const double *vals, const st_pwl *pwl, double *out, size_t cnt);
+e_dcmp_status apply_comp_decomp(st_norm_bayer_img *img, const st_pwl *pwl);
 
 #endif
