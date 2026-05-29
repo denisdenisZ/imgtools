@@ -46,7 +46,6 @@ e_img_status create_img(const st_raw_bayer_img_cfg *cfg, st_raw_bayer_img *out) 
     out->packing = cfg->packing;
     out->bit_align = cfg->bit_align;
     out->endianness = cfg->endianness;
-    out->compand = cfg->compand;
     out->width = cfg->width;
     out->height = cfg->height;
     out->femb_lines_cnt = cfg->femb_lines_cnt;
@@ -72,6 +71,29 @@ e_img_status destroy_raw_img(st_raw_bayer_img *img) {
     free(img->data);
     img->data = NULL;
     img->data_size = 0;
+    return IMG_SUCCESS;
+}
+
+e_img_status create_norm_img(st_raw_bayer_img_cfg *cfg, st_norm_bayer_img *out) {
+    memset(out, 0, sizeof(st_norm_bayer_img));
+
+    out->bpp = cfg->bpp;
+
+    out->width = cfg->width;
+    out->height = cfg->height;
+
+    out->pattern = cfg->pattern;
+
+    out->black_level = cfg->black_level;
+
+    out->femb_lines_cnt = 0;
+    out->remb_lines_cnt = 0;
+    out->femb_data = NULL;
+    out->remb_data = NULL;
+
+    out->offset_x = 0;
+    out->offset_y = 0;
+
     return IMG_SUCCESS;
 }
 
@@ -120,7 +142,6 @@ e_img_status normalize_img(const st_raw_bayer_img *img, st_norm_bayer_img *out) 
     memset(out, 0, sizeof(st_norm_bayer_img));
 
     out->pattern = img->pattern;
-    out->compand = img->compand;
     out->bpp = img->bpp;
     out->width = img->width;
     out->height = img->height;
@@ -130,11 +151,16 @@ e_img_status normalize_img(const st_raw_bayer_img *img, st_norm_bayer_img *out) 
     out->offset_x = img->offset_x;
     out->offset_y = img->offset_y;
     out->data_size = out->width * (out->femb_lines_cnt + out->remb_lines_cnt + out->height);
-    out->data = calloc(out->data_size, sizeof(uint32_t));
+    out->px_data = calloc(out->data_size, sizeof(uint32_t));
 
-    norm_bpp(img->data, out->data_size, img->bpp, out->data);
-    norm_endianness(out->data, out->data_size, img->endianness);
-    norm_bit_align(out->data, out->data_size, img->bpp, img->bit_align);
+    norm_bpp(img->data, out->data_size, img->bpp, out->px_data);
+
+    out->femb_data = out->femb_lines_cnt ? out->px_data : NULL;
+    out->remb_data = out->remb_lines_cnt ? out->px_data + out->height*out->width : NULL;
+    out->px_data = out->px_data + out->femb_lines_cnt * out->width;
+
+    norm_endianness(out->px_data, out->data_size, img->endianness);
+    norm_bit_align(out->px_data, out->data_size, img->bpp, img->bit_align);
 
     return IMG_SUCCESS;
 }

@@ -87,8 +87,10 @@ typedef struct {
     st_compand_info *compand;
 
     uint32_t stride;
+    // NOTE: Pixel lines only!
     uint32_t width;
     uint32_t height;
+
     uint32_t femb_lines_cnt;
     uint32_t remb_lines_cnt;
     uint32_t black_level;
@@ -102,21 +104,26 @@ typedef struct {
 } st_raw_bayer_img;
 
 typedef struct {
-    st_compand_info *compand;
     e_bayer_pat pattern;
     bpp_t bpp;
 
+    // NOTE: Pixel lines only!
     uint32_t width;
     uint32_t height;
+
     uint32_t femb_lines_cnt;
+    uint32_t *femb_data;
+
     uint32_t remb_lines_cnt;
+    uint32_t *remb_data;
+
     uint32_t black_level;
 
     // NOTE: Does not count femb, 0,0 is the first valid bayer pixel
     uint32_t offset_x;
     uint32_t offset_y;
 
-    uint32_t *data;
+    uint32_t *px_data;
     uint32_t data_size;
 } st_norm_bayer_img;
 
@@ -135,8 +142,7 @@ typedef struct {
     e_bit_align bit_align;
     e_endianness endianness;
 
-    st_compand_info *compand;
-
+    // NOTE: Pixel lines only!
     uint32_t width;
     uint32_t height;
 
@@ -145,6 +151,7 @@ typedef struct {
 
     uint32_t black_level;
 
+    // NOTE: Does not count femb, 0,0 is the first valid bayer pixel
     uint32_t offset_x;
     uint32_t offset_y;
 } st_raw_bayer_img_cfg;

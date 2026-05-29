@@ -13,7 +13,7 @@ static inline uint32_t pow2_u32(uint32_t pow) {
 }
 
 static inline uint32_t get_mrv(uint8_t bits) {
-    return (uint32_t)((1ULL << bits) - 1);
+    return (uint32_t)(pow2_u32(bits) - 1);
 }
 
 static inline e_math_status best_fixed_u32(double x, uint8_t bits, uint32_t *fac, uint32_t *shift) {
@@ -43,6 +43,14 @@ static inline e_math_status calc_slope(uint32_t x1, uint32_t x2, uint32_t y1, ui
 static inline e_math_status point_slope_lerp(uint32_t x, double slope, uint32_t x1, uint32_t y1, double *out) {
     *out = (double)y1 + (((double)x - (double)x1) * slope);
     return MATH_SUCCESS;
+}
+
+static inline uint32_t min_u32(uint32_t a, uint32_t b) {
+    return a > b ? b : a;
+}
+
+static inline uint32_t max_u32(uint32_t a, uint32_t b) {
+    return a < b ? b : a;
 }
 
 #endif
